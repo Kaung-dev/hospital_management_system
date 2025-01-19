@@ -1,5 +1,6 @@
 using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,9 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//DI
+// DI for the database context
 builder.Services.AddDbContext<HospitalDbContext>(options =>
     options.UseInMemoryDatabase("HospitalDb"));
+
+// Add session services
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout duration
+    options.Cookie.HttpOnly = true; // Make the session cookie accessible only via HTTP
+    options.Cookie.IsEssential = true; // Mark the cookie as essential
+});
 
 var app = builder.Build();
 
@@ -17,7 +27,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -26,14 +35,16 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Add session middleware
+app.UseSession();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
-///
-
+// Seed data
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<HospitalDbContext>();
@@ -57,7 +68,32 @@ using (var scope = app.Services.CreateScope())
         );
         context.SaveChanges();
     }
-}
 
+    // Seed Users
+    if (!context.Users.Any())
+    {
+        var passwordHasher = new PasswordHasher<string>();
+        context.Users.AddRange(
+            new User
+            {
+                Name = "Admin",
+                Email = "admin@example.com",
+                Password = passwordHasher.HashPassword(null, "Admin@123"),
+                //Role = "Admin",
+                Phone = "1234567890"
+            },
+            new User
+            {
+                Name = "Doctor John",
+                Email = "doctor@example.com",
+                Password = passwordHasher.HashPassword(null, "Doctor@123"),
+                //Role = "Doctor",
+                Phone = "9876543210"
+            }
+        );
+        context.SaveChanges();
+    }
+
+}
 
 app.Run();

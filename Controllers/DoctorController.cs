@@ -1,7 +1,6 @@
 ﻿using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,25 +33,13 @@ namespace HospitalManagementSystem.Controllers
         // POST: Create doctor
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Doctor doctor, IFormFile? drImage)
+        public async Task<IActionResult> Create(Doctor doctor)
         {
             if (ModelState.IsValid)
             {
                 // Password hashing
                 var passwordHasher = new PasswordHasher<string>();
                 doctor.Password = passwordHasher.HashPassword(null, doctor.Password);
-
-                // Image upload
-                if (drImage != null)
-                {
-                    var imageName = $"{Guid.NewGuid()}_{drImage.FileName}";
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/dr", imageName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await drImage.CopyToAsync(stream);
-                    }
-                    doctor.Image = imageName;
-                }
 
                 _context.Doctors.Add(doctor);
                 await _context.SaveChangesAsync();

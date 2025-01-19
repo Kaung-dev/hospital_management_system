@@ -11,7 +11,8 @@ namespace HospitalManagementSystem.Data
             
         }
 
-        
+        public DbSet<User> Users { get; set; }
+
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
 
@@ -20,5 +21,23 @@ namespace HospitalManagementSystem.Data
 
 
         public DbSet<Nurse> Nurses { get; set; }
+        public DbSet<CashFlow> CashFlows { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CashFlow>().HasData(
+                new CashFlow
+                {
+                    Id = 1,
+                    AppointmentsCash = 200,
+                    LabCash = 500,
+                    PharmacyCash = 300
+                }
+            );
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }

@@ -36,8 +36,6 @@ namespace HospitalManagementSystem.Models
 
         public string PersonalProfile { get; set; }
 
-        public string Image { get; set; }
-
         // Foreign Key
         public int FkDept { get; set; }
         public Department FkDeptNavigation { get; set; }
