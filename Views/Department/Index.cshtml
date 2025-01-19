@@ -1,0 +1,30 @@
+﻿@model IEnumerable<HospitalManagementSystem.Models.Department>
+
+<h2>Departments</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Add Department</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Appointment Cost</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var department in Model)
+        {
+            <tr>
+                <td>@department.Name</td>
+                <td>@department.app_price</td>
+                <td>@department.Description</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@department.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@department.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

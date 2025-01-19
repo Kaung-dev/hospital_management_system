@@ -1,0 +1,28 @@
+﻿@model IEnumerable<HospitalManagementSystem.Models.Patient>
+
+<h1>Patient List</h1>
+<a href="@Url.Action("Create", "Home")" class="btn btn-primary">Add Patient</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Diagnosis</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var patient in Model)
+        {
+            <tr>
+                <td>@patient.Name</td>
+                <td>@patient.Age</td>
+                <td>@patient.Diagnosis</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Home", new { id = patient.Id })" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="@Url.Action("Delete", "Home", new { id = patient.Id })" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

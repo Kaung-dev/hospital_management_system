@@ -1,0 +1,36 @@
+﻿@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+
+<a asp-action="Create" class="btn btn-primary mb-3">Add Appointment</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Department</th>
+            <th>Day</th>
+            <th>Payment Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var appointment in Model)
+        {
+            <tr>
+                <td>@appointment.Patient?.Name</td>
+                <td>@appointment.Department?.Name</td>
+                <td>@appointment.Day</td>
+                <td>@(appointment.Status == 0 ? "Cash" : "Online Payment")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@appointment.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@appointment.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<HospitalManagementSystem.Models.Nurse>
+
+@{
+    ViewData["Title"] = "Nurse List";
+}
+
+<h2>Nurse List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Specialization</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var nurse in Model)
+        {
+            <tr>
+                <td>@nurse.Name</td>
+                <td>@nurse.Age</td>
+                <td>@nurse.Email</td>
+                <td>@nurse.Phone</td>
+                <td>@nurse.FkDeptNavigation?.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@nurse.Id" class="btn btn-primary">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@nurse.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
